@@ -1,9 +1,12 @@
 package com.dailycodework.dream_shops.controllers;
 
+import com.dailycodework.dream_shops.dto.CartDto;
+import com.dailycodework.dream_shops.dto.ProductDto;
 import com.dailycodework.dream_shops.exception.ResourceNotFoundException;
 import com.dailycodework.dream_shops.models.Cart;
 import com.dailycodework.dream_shops.response.ApiResponse;
 import com.dailycodework.dream_shops.services.cart.ICartService;
+import com.dailycodework.dream_shops.services.product.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +20,14 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequestMapping("${api.prefix}/carts")
 public class CartController {
     private final ICartService cartService;
+    private final IProductService productService;
 
     @GetMapping("/cart/{cartId}/my-cart")
     public ResponseEntity<ApiResponse> getCartById(@PathVariable Long cartId){
         try {
             Cart cart = cartService.getCart(cartId);
-            return ResponseEntity.ok(new ApiResponse("Success", cart));
+            CartDto cartDto = cartService.convertToDto(cart);
+            return ResponseEntity.ok(new ApiResponse("Success", cartDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));

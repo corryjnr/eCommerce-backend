@@ -9,7 +9,8 @@ import java.util.Set;
 
 @Data
 public class CartDto {
+    // private Long id;
     private BigDecimal totalAmount;
-    private List<CartItem> cartItems;
+    private List<CartItemDto> cartItems;
 
 }

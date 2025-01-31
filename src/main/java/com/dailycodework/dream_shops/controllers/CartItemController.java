@@ -28,7 +28,7 @@ public class CartItemController {
         return ResponseEntity.ok(new ApiResponse("Add item success!", null));
     }
 
-    @DeleteMapping("/cart/{cartID}item/{productId}/remove")
+    @DeleteMapping("/cart/{cartId}/item/{productId}/remove")
     public ResponseEntity<ApiResponse> removeItemFromCart(@PathVariable  Long cartId,
                                                           @PathVariable Long productId){
         try {
