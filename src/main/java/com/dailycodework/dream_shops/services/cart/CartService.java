@@ -6,6 +6,7 @@ import com.dailycodework.dream_shops.models.*;
 import com.dailycodework.dream_shops.repositories.CartItemRepository;
 import com.dailycodework.dream_shops.repositories.CartRepository;
 import com.dailycodework.dream_shops.services.product.IProductService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class CartService implements ICartService{
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found!"));
     }
 
+    @Transactional
     @Override
     public void clearCart(Long cartId) {
         Cart cart = getCart(cartId);
