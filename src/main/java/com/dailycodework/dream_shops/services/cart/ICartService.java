@@ -16,5 +16,7 @@ public interface ICartService {
     List<CartDto> getConvertedCarts(List<Cart> carts);
 
     CartDto convertToDto(Cart cart);
+
+    Cart getCartByUserId(Long userId);
     // List<CartItem> getCartItems(Long cartId);
 }

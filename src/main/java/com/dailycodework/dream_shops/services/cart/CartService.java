@@ -71,4 +71,9 @@ public class CartService implements ICartService{
         cartDto.setCartItems(cartItemDtos);
         return cartDto;
     }
+
+    @Override
+    public Cart getCartByUserId(Long userId) {
+        return cartRepository.findByUserId(userId);
+    }
 }
