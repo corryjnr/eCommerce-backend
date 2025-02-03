@@ -1,5 +1,6 @@
 package com.dailycodework.dreamshops.services.user;
 
+import com.dailycodework.dreamshops.dto.UserDto;
 import com.dailycodework.dreamshops.exception.AlreadyExistsException;
 import com.dailycodework.dreamshops.exception.ResourceNotFoundException;
 import com.dailycodework.dreamshops.models.User;
@@ -7,6 +8,7 @@ import com.dailycodework.dreamshops.repositories.UserRepository;
 import com.dailycodework.dreamshops.requests.CreateUserRequest;
 import com.dailycodework.dreamshops.requests.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,6 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements IUserService{
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
     @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
@@ -49,5 +52,10 @@ public class UserService implements IUserService{
         userRepository.findById(userId).ifPresentOrElse(userRepository::delete, () ->{
             throw new ResourceNotFoundException("User not found!");
         });
+    }
+
+    @Override
+    public UserDto convertToDto(User user){
+        return modelMapper.map(user, UserDto.class);
     }
 }

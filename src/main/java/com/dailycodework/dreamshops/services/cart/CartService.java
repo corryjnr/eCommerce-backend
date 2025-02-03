@@ -59,17 +59,7 @@ public class CartService implements ICartService{
     @Override
     public CartDto convertToDto(Cart cart){
         List<CartItem> cartItems = cart.getCartItems().stream().toList();
-        List<CartItemDto> cartItemDtos = cartItems.stream()
-                .map(item -> {
-                    ProductDto productDto = productService.convertToDto(item.getProduct());
-                    CartItemDto newItem = modelMapper.map(item, CartItemDto.class);
-                    newItem.setProduct(productDto);
-                    return newItem;
-                })
-                .toList();
-        CartDto cartDto = modelMapper.map(cart, CartDto.class);
-        cartDto.setCartItems(cartItemDtos);
-        return cartDto;
+        return modelMapper.map(cart, CartDto.class);
     }
 
     @Override

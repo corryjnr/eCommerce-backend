@@ -1,5 +1,6 @@
 package com.dailycodework.dreamshops.services.order;
 
+import com.dailycodework.dreamshops.dto.OrderDto;
 import com.dailycodework.dreamshops.enums.OrderStatus;
 import com.dailycodework.dreamshops.exception.ResourceNotFoundException;
 import com.dailycodework.dreamshops.models.Cart;
@@ -10,6 +11,7 @@ import com.dailycodework.dreamshops.repositories.OrderRepository;
 import com.dailycodework.dreamshops.repositories.ProductRepository;
 import com.dailycodework.dreamshops.services.cart.ICartService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,8 +25,10 @@ public class OrderService implements IOrderService{
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final ICartService cartService;
+    private final ModelMapper modelMapper;
+
     @Override
-    public Order placeOrder(Long userId) {
+    public OrderDto placeOrder(Long userId) {
         Cart cart = cartService.getCartByUserId(userId);
         Order order = createOrder(cart);
         List<OrderItem> orderItems = createOrderItems(order, cart);
@@ -32,7 +36,7 @@ public class OrderService implements IOrderService{
         order.setTotalAmount(calculateTotalAmount(orderItems));
         Order savedOrder = orderRepository.save(order);
         cartService.clearCart(cart.getId());
-        return savedOrder;
+        return convertToDto(savedOrder);
     }
 
     private Order createOrder(Cart cart) {
@@ -60,13 +64,18 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public Order getOrder(Long orderId) {
-        return orderRepository.findById(orderId)
+    public OrderDto getOrder(Long orderId) {
+        return orderRepository.findById(orderId).map(this::convertToDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
     }
 
     @Override
-    public List<Order> getUserOrders(Long userId){
-        return orderRepository.findByUserId(userId);
+    public List<OrderDto> getUserOrders(Long userId){
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.stream().map(this::convertToDto).toList();
+    }
+
+    public OrderDto convertToDto(Order order){
+        return modelMapper.map(order, OrderDto.class);
     }
 }

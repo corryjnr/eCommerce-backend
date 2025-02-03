@@ -7,8 +7,8 @@ import java.util.List;
 
 @Data
 public class CartDto {
-    // private Long id;
+    // private Long cartId;
     private BigDecimal totalAmount;
-    private List<CartItemDto> cartItems;
+    private List<CartItemDto> items;
 
 }
