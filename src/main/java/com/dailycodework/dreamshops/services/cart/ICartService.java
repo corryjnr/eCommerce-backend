@@ -2,6 +2,7 @@ package com.dailycodework.dreamshops.services.cart;
 
 import com.dailycodework.dreamshops.dto.CartDto;
 import com.dailycodework.dreamshops.models.Cart;
+import com.dailycodework.dreamshops.models.User;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,7 +12,7 @@ public interface ICartService {
     void clearCart(Long cartId);
     BigDecimal getTotalAmount(Long cartId);
 
-    Long initializeNewCart();
+    Cart initializeNewCart(User user);
 
     List<CartDto> getConvertedCarts(List<Cart> carts);
 

@@ -30,6 +30,9 @@ public class OrderService implements IOrderService{
     @Override
     public OrderDto placeOrder(Long userId) {
         Cart cart = cartService.getCartByUserId(userId);
+        if(cart.getCartItems().isEmpty()){
+            throw new ResourceNotFoundException("No items in cart");
+        }
         Order order = createOrder(cart);
         List<OrderItem> orderItems = createOrderItems(order, cart);
         order.setOrderItems(new HashSet<>(orderItems));

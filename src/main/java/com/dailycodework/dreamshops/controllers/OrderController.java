@@ -25,8 +25,8 @@ public class OrderController {
         try {
             OrderDto order = orderService.placeOrder(userId);
             return ResponseEntity.ok(new ApiResponse("Item order success!", order));
-        } catch (Exception e) {
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR )
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(NOT_FOUND )
                     .body(new ApiResponse(e.getMessage(), null));
         }
     }
@@ -35,14 +35,14 @@ public class OrderController {
     public ResponseEntity<ApiResponse> getOrderById(@PathVariable Long orderID){
         try {
             OrderDto order = orderService.getOrder(orderID);
-            return ResponseEntity.ok(new ApiResponse("Item order success!", order));
+            return ResponseEntity.ok(new ApiResponse("Success!", order));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND )
                     .body(new ApiResponse(e.getMessage(), null));
         }
     }
 
-    @GetMapping("/{userID}")
+    @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse> getUserOrders(@PathVariable Long userId){
         try {
             List<OrderDto> orders = orderService.getUserOrders(userId);

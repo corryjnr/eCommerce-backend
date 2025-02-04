@@ -5,6 +5,7 @@ import com.dailycodework.dreamshops.exception.ResourceNotFoundException;
 import com.dailycodework.dreamshops.models.*;
 import com.dailycodework.dreamshops.repositories.CartItemRepository;
 import com.dailycodework.dreamshops.repositories.CartRepository;
+import com.dailycodework.dreamshops.repositories.UserRepository;
 import com.dailycodework.dreamshops.services.product.IProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -35,6 +37,7 @@ public class CartService implements ICartService{
         cartItemRepository.deleteAllByCartId(cartId);
         cart.getCartItems().clear();
         cartRepository.deleteById(cartId);
+        cart.updateTotalAmount();
     }
 
     @Override
@@ -44,15 +47,18 @@ public class CartService implements ICartService{
     }
 
     @Override
-    public Long initializeNewCart(){
-        Cart newCart = new Cart();
-        // Long newCartId = cartIdGenerator.incrementAndGet();
-        // newCart.setId(newCartId);
-        return cartRepository.save(newCart).getId();
+    public Cart initializeNewCart(User user){
+        return Optional.ofNullable(getCartByUserId(user.getId()))
+                .orElseGet(() -> {
+                    Cart cart = new Cart();
+                    cart.setUser(user);
+                    return cartRepository.save(cart);
+                });
     }
 
     @Override
     public List<CartDto> getConvertedCarts(List<Cart> carts){
+
         return carts.stream().map(this::convertToDto).toList();
     }
 
