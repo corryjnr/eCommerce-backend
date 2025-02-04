@@ -31,7 +31,7 @@ public class OrderService implements IOrderService{
     public OrderDto placeOrder(Long userId) {
         Cart cart = cartService.getCartByUserId(userId);
         if(cart.getCartItems().isEmpty()){
-            throw new ResourceNotFoundException("No items in cart");
+            throw new ResourceNotFoundException("Cart empty! Add items to order.");
         }
         Order order = createOrder(cart);
         List<OrderItem> orderItems = createOrderItems(order, cart);
