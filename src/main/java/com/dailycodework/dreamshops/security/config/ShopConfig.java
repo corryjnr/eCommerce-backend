@@ -2,6 +2,7 @@ package com.dailycodework.dreamshops.security.config;
 
 import com.dailycodework.dreamshops.security.jwt.AuthTokenFilter;
 import com.dailycodework.dreamshops.security.jwt.JwtAuthEntryPoint;
+import com.dailycodework.dreamshops.security.jwt.JwtUtils;
 import com.dailycodework.dreamshops.security.user.ShopUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,6 +30,7 @@ import java.util.List;
 public class ShopConfig {
     private final ShopUserDetailsService userDetailsService;
     private final JwtAuthEntryPoint authEntryPoint;
+    private final JwtUtils jwtUtils;
 
     private static final List<String> SECURED_URLS = List.of("api/v1/carts/**", "api/v1/cartItems/**");
 
@@ -44,7 +46,7 @@ public class ShopConfig {
 
     @Bean
     public AuthTokenFilter authTokenFilter(){
-        return new AuthTokenFilter();
+        return new AuthTokenFilter(jwtUtils, userDetailsService);
     }
 
     @Bean
